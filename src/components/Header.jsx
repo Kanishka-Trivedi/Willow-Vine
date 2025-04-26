@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { IoCartOutline } from "react-icons/io5";
 import { IoIosGitCompare } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
+import Navigation from './Navigation';
 
 
 
@@ -22,7 +23,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 function Header() {
     return (
-        <header>
+        <header className='bg-white'>
             <div className='top-strip py-2 border-t-[1px] border-gray-200 border-b-[2px]'>
                 <div className='container'>
                     <div className='flex items-center justify-between'>
@@ -97,6 +98,10 @@ function Header() {
                     </div>
                 </div>
             </div>
+
+
+         <Navigation />
+
         </header>
     )
 }
