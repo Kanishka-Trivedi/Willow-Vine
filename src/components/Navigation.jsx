@@ -18,7 +18,7 @@ const Navigation = () => {
     return (
         <>
             <nav className='py-2'>
-                <div className='container max-w-none flex items-center justify-between gap-6'>
+                <div className='container max-w-none flex items-center justify-end gap-7'>
                     <div className='col_1 w-[20%] whitespace-nowrap'>
                         <Button className='!text-black gap-2 font-semibold w-full' onClick={openCategoryPanel}> <RiMenu2Fill className='text-[17px]' />
                             Shop By Categories
@@ -49,7 +49,7 @@ const Navigation = () => {
 
 
 
-                                                <div className='submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                                <div className='submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                                     <ul>
                                                         <li className='list-none w-full'>
                                                             <Link to="/" className='link transition w-full'>
@@ -103,7 +103,7 @@ const Navigation = () => {
 
 
 
-                                                <div className='submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                                <div className='submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                                     <ul>
                                                         <li className='list-none w-full'>
                                                             <Link to="/" className='link transition w-full'>
@@ -160,7 +160,7 @@ const Navigation = () => {
                                     <Button className='nav-button link transition whitespace-nowrap !font-[500] !text-[17px]'>Gardening Tools</Button>
 
 
-                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                         <ul>
                                             <li className='list-none w-full relative'>
                                                 <Link to="/" className='link transition w-full'>
@@ -207,7 +207,7 @@ const Navigation = () => {
                                     <Button className='nav-button link transition whitespace-nowrap !font-[500] !text-[17px]'>Soils & Fertilizers</Button>
 
 
-                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                         <ul>
                                             <li className='list-none w-full relative'>
                                                 <Link to="/" className='link transition w-full'>
@@ -248,7 +248,7 @@ const Navigation = () => {
                                     <Button className='nav-button link transition whitespace-nowrap !font-[500] !text-[17px]'>Pots & Planters</Button>
 
 
-                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                         <ul>
                                             <li className='list-none w-full relative'>
                                                 <Link to="/" className='link transition w-full'>
@@ -295,7 +295,7 @@ const Navigation = () => {
                                     <Button className='nav-button link transition whitespace-nowrap !font-[500] !text-[17px]'>Seeds & Bulbs</Button>
 
 
-                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                         <ul>
                                             <li className='list-none w-full relative'>
                                                 <Link to="/" className='link transition w-full'>
@@ -336,7 +336,7 @@ const Navigation = () => {
                                     <Button className='nav-button link transition whitespace-nowrap !font-[500] !text-[17px]'>Accessories</Button>
 
 
-                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all'>
+                                    <div className='submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all whitespace-nowrap'>
                                         <ul>
                                             <li className='list-none w-full relative'>
                                                 <Link to="/" className='link transition w-full'>

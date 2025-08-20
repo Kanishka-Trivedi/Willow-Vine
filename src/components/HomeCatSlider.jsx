@@ -18,8 +18,8 @@ import { Link } from 'react-router-dom';
 
 function HomeCatSlider() {
     return (
-        <div className='homeCatSlider'>
-            <div className='container'>
+        <div className='homeCatSlider w-full pt-4 py-8'>
+            <div className='container w-full whitespace-nowrap'>
                 <Swiper
                     slidesPerView={7}
                     spaceBetween={20}

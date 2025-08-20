@@ -2,7 +2,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 import Succulents from '../assets/Succulents.jpg'
 import Plants from '../assets/Plants.jpg'
 import Seeds from '../assets/Seeds.jpg'
@@ -16,7 +16,15 @@ function HomeSlider() {
         <div>
             <div className='homeSlider py-4'>
                 <div className='container'>
-                    <Swiper spaceBetween={10} navigation={true} modules={[Navigation]} className="sliderHome">
+                    <Swiper 
+                    spaceBetween={10} 
+                    navigation={true}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: false,
+                      }} 
+                    modules={[Navigation, Autoplay]}
+                    className="sliderHome">
                         <SwiperSlide>
                             <div className='item rounded-[20px] overflow-hidden'>
                                 <img src={Succulents} alt="Succulents" className="w-full h-[500px] object-cover" />

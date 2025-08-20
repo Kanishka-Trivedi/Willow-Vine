@@ -8,6 +8,11 @@ body{
     color: rgba(0, 0, 0, 0.9);
     overflow-x: hidden;
 }
+
+::-webkit-scrollbar{width: 10px !important; height: 10px !important;}
+::-webkit-scrollbar-thumb{background: #4CBB17;}
+::-webkit-scrollbar-track{background: #fff;}
+
 .container{width: 95%; margin: auto;}
 
 
@@ -88,6 +93,14 @@ nav button{
     color: #33880b;
 }
 
+.swiper-button-prev:hover, .swiper-button-next:hover{
+    background: #33880b !important;
+}
+
+.swiper-button-prev:hover::after, .swiper-button-next:hover::after{
+    color: #fff !important;
+}
+
 .homeCatSlider items{
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -123,3 +136,22 @@ nav button{
 .homeCatSlider .swiper-button-prev:hover::after, .homeCatSlider .swiper-button-next:hover::after{
     color: #fff !important;
 }
+
+.MuiTabs-indicator{ background-color: #4CBB17 !important;}
+.MuiTab-textColorPrimary.Mui-selected{ color: #4CBB17 !important;}
+
+
+/* ProductItem.css */
+
+.productItem .title{line-height: 20px;}
+
+.productItem .actions button:hover svg{
+    color: #fff !important;
+}
+
+
+/* ProductSlider.css */
+.productSlider .swiper-wrapper{
+    padding: 15px; 
+    margin-left: -15px; 
+    margin-right: -15px;}
