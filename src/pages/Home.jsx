@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ProductSlider from '../components/ProductSlider';
+import products from '../data/products'; 
 
 
 function Home() {
@@ -90,7 +91,8 @@ function Home() {
 
 
 
-          <ProductSlider items = {5} />
+          <ProductSlider items={5} products={products} />
+
 
 
         </div>
