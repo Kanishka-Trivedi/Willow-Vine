@@ -49,6 +49,106 @@
 
 
 
+// import React from 'react'
+// import { Link } from 'react-router-dom'
+// import Rating from '@mui/material/Rating';
+// import { Button } from '@mui/material';
+// import { FaRegHeart } from "react-icons/fa";
+// import { IoIosGitCompare } from "react-icons/io";
+// import { MdOutlineZoomOutMap } from "react-icons/md";
+// import PropTypes from 'prop-types';
+
+// const ProductItem = ({
+//     image,
+//     title,
+//     rating = 0,
+//     price,
+//     oldPrice,
+//     discountLabel,        // e.g., "40% Off" (optional)
+//     link = "/",
+//     onFavorite = () => { },
+//     onQuickView = () => { },
+//     onCompare = () => { }
+// }) => {
+//     return (
+//         <div className='productItem shadow-lg rounded-md overflow-hidden  border-[rgba(0, 0, 0, 0.1)]'>
+//             <div className='group imgWrapper w-[100%] h-[250px] overflow-hidden rounded-t-md relative'>
+//                 <img src={image} alt={title} className='w-full h-full object-cover' />
+
+//                 {discountLabel && (
+//                     <span className='discount flex items-center absolute top-[10px] left-[10px] z-50 bg-[#4CBB17] text-white rounded-lg p-1 text-[12px] font-[500]'>
+//                         {discountLabel}
+//                     </span>
+//                 )}
+
+//                 <div className='actions absolute top-[-200px] right-[5px] z-50 flex items-center gap-2 flex-col w-[50px] group-hover:top-[15px] transition-all duration-700 opacity-0 group-hover:opacity-100'>
+//                     <Button
+//                         onClick={onFavorite}
+//                         aria-label="Add to wishlist"
+//                         className='!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white !text-black hover:!bg-[#4CBB17] hover:text-white group'
+//                     >
+//                         <FaRegHeart className='text-[18px] !text-black hover:!text-white group-hover:text-white' />
+//                     </Button>
+
+//                     <Button
+//                         onClick={onQuickView}
+//                         aria-label="Quick view"
+//                         className='!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white !text-black hover:!bg-[#4CBB17] hover:text-white group'
+//                     >
+//                         <MdOutlineZoomOutMap className='text-[18px] !text-black hover:!text-white group-hover:text-white' />
+//                     </Button>
+
+//                     <Button
+//                         onClick={onCompare}
+//                         aria-label="Compare"
+//                         className='!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white !text-black hover:!bg-[#4CBB17] hover:text-white group'
+//                     >
+//                         <IoIosGitCompare className='text-[18px] !text-black hover:!text-white group-hover:text-white' />
+//                     </Button>
+//                 </div>
+//             </div>
+
+//             <div className='info p-3 py-5 bg-[#ffeac4]'>
+//                 <h3 className='text-[16px] title mt-1 mb-1 font-[500] text-[#000] leading-[20px] min-h-[40px] line-clamp-2'>
+//                     <Link to={link} className="link transition-all">{title}</Link>
+//                 </h3>
+
+//                 <Rating name="size-small" value={rating} size="small" readOnly />
+
+//                 <div className='flex items-center gap-4'>
+//                     {oldPrice && (
+//                         <span className='oldPrice line-through text-gray-500 text-[15px] font-[500]'>
+//                             {oldPrice}
+//                         </span>
+//                     )}
+//                     <span className='price text-[#1e975a] text-[15px] font-[600]'>{price}</span>
+//                 </div>
+//             </div>
+//         </div>
+//     )
+// }
+
+// ProductItem.propTypes = {
+//     image: PropTypes.string.isRequired,
+//     title: PropTypes.string.isRequired,
+//     rating: PropTypes.number,
+//     price: PropTypes.string.isRequired,
+//     oldPrice: PropTypes.string,
+//     discountLabel: PropTypes.string,
+//     link: PropTypes.string,
+//     onFavorite: PropTypes.func,
+//     onQuickView: PropTypes.func,
+//     onCompare: PropTypes.func
+// };
+
+// export default ProductItem
+
+
+
+
+
+
+
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Rating from '@mui/material/Rating';
@@ -58,22 +158,29 @@ import { IoIosGitCompare } from "react-icons/io";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import PropTypes from 'prop-types';
 
+const FALLBACK_IMAGE = '/fallback.png'; // Add this file in your public folder
+
 const ProductItem = ({
     image,
     title,
     rating = 0,
     price,
     oldPrice,
-    discountLabel,        // e.g., "40% Off" (optional)
+    discountLabel,
     link = "/",
     onFavorite = () => { },
     onQuickView = () => { },
     onCompare = () => { }
 }) => {
     return (
-        <div className='productItem shadow-lg rounded-md overflow-hidden  border-[rgba(0, 0, 0, 0.1)]'>
+        <div className='productItem shadow-lg rounded-md overflow-hidden border-[rgba(0, 0, 0, 0.1)]'>
             <div className='group imgWrapper w-[100%] h-[250px] overflow-hidden rounded-t-md relative'>
-                <img src={image} alt={title} className='w-full h-full object-cover' />
+                <img 
+                    src={image || FALLBACK_IMAGE} 
+                    alt={title} 
+                    className='w-full h-full object-cover'
+                    onError={(e) => (e.target.src = FALLBACK_IMAGE)}
+                />
 
                 {discountLabel && (
                     <span className='discount flex items-center absolute top-[10px] left-[10px] z-50 bg-[#4CBB17] text-white rounded-lg p-1 text-[12px] font-[500]'>

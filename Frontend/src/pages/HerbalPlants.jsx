@@ -45,13 +45,25 @@
 import React from "react";
 import Header from "../components/Header.jsx"; 
 import ProductSlider from "../components/ProductSlider";
-import products from "../data/products.js";
+import { getPlants } from "../api";
+import { useState, useEffect } from "react";
+
 
 const HerbalPlants = () => {
-  // filter succulent products
-  const herbalPlants = products.filter(
-    (p) => p.category === "Herbal Plants"
-  );
+  const [plants, setPlants] = useState([]);
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const { data } = await getPlants();
+        // only keep succulents
+        setPlants(data.filter(plant => plant.category === "Herbal Plants"));
+      } catch (error) {
+        console.error("Error fetching plants:", error);
+      }
+    };
+    fetchPlants();
+  }, []);
 
   return (
     <div>
@@ -65,7 +77,7 @@ const HerbalPlants = () => {
             outdoor decoration.
           </p>
 
-          <ProductSlider items={5} products={herbalPlants} />
+          <ProductSlider items={5} products={plants} />
         </div>
       </section>
     </div>

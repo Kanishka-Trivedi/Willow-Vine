@@ -1,12 +1,24 @@
 import React from "react";
 import ProductSlider from "../components/ProductSlider";
-import products from "../data/products.js";
+import { getPlants } from "../api";
+import { useState, useEffect } from "react";
+
 
 const AirPurifyingPlants = () => {
-  // filter Air Purifying Plants products
-  const airPurifyingPlants = products.filter(
-    (p) => p.category === "Air Purifying Plants"
-  );
+  const [plants, setPlants] = useState([]);
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const { data } = await getPlants();
+        // only keep succulents
+        setPlants(data.filter(plant => plant.category === "Air Purifying Plants"));
+      } catch (error) {
+        console.error("Error fetching plants:", error);
+      }
+    };
+    fetchPlants();
+  }, []);
 
   return (
     <div>
@@ -20,7 +32,7 @@ const AirPurifyingPlants = () => {
             outdoor decoration.
           </p>
 
-          <ProductSlider items={5} products={airPurifyingPlants} />
+          <ProductSlider items={5} products={plants} />;
         </div>
       </section>
     </div>

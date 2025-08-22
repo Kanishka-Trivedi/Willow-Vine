@@ -90,7 +90,7 @@ const CategoryPanel = (props) => {
                                         innerSubmenuIndex === 0 &&
                                         <ul className='inner_submenu w-full pl-3'>
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/succulents"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Succulents
@@ -98,7 +98,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/flowering"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Flowering Plants
@@ -106,15 +106,15 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/cactus"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
-                                                    Foliage Plants
+                                                    Cactus
                                                 </Link>
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/bonsai"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Bonsai Plants
@@ -122,7 +122,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/air-purifying"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Air Purifying Plants
@@ -130,7 +130,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/hanging"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Hanging Plants
@@ -138,7 +138,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/herbal"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Herbs

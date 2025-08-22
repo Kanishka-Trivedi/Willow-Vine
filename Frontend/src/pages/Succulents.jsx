@@ -1,17 +1,25 @@
-import React from "react";
-import Header from "../components/Header.jsx"; 
+import React, { useState, useEffect } from "react";
 import ProductSlider from "../components/ProductSlider";
-import products from "../data/products.js";
+import { getPlants } from "../api";
 
 const Succulents = () => {
-  // filter succulent products
-  const succulentProducts = products.filter(
-    (p) => p.category === "Succulents"
-  );
+  const [plants, setPlants] = useState([]);
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const { data } = await getPlants();
+        // only keep succulents
+        setPlants(data.filter(plant => plant.category === "Succulents"));
+      } catch (error) {
+        console.error("Error fetching plants:", error);
+      }
+    };
+    fetchPlants();
+  }, []);
 
   return (
     <div>
-
       {/* ✅ Succulent Section */}
       <section className="bg-white py-8">
         <div className="container">
@@ -21,7 +29,7 @@ const Succulents = () => {
             outdoor decoration.
           </p>
 
-          <ProductSlider items={5} products={succulentProducts} />
+          <ProductSlider items={5} products={plants} />
         </div>
       </section>
     </div>
