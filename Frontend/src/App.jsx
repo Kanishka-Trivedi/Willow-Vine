@@ -8,6 +8,11 @@ import FloweringPlants from './pages/FloweringPlants';
 import AirPurifyingPlants from './pages/AirPurifyingPlants';
 import Cactus from './pages/Cactus';
 import HangingPlants from './pages/HangingPlants';
+import Ornamental from './pages/Ornamental';
+import ClimbersAndCreepers from './pages/ClimbersAndCreepers';
+import FruitPlants from './pages/FruitPlants';
+import VegetablePlants from './pages/VegetablePlants';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -25,7 +30,12 @@ function App() {
         <Route path="/air-purifying" element={<AirPurifyingPlants />} />
         <Route path="/cactus" element={<Cactus />} />
         <Route path="/hanging" element={<HangingPlants />} />
+        <Route path="/ornamental" element={<Ornamental />} />
+        <Route path="/climbers" element={<ClimbersAndCreepers />} />
+        <Route path="/fruit-plants" element={<FruitPlants />} />
+        <Route path="/vegetable-plants" element={<VegetablePlants />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
     </>
   );

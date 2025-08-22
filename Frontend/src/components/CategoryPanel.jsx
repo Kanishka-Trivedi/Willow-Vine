@@ -178,7 +178,7 @@ const CategoryPanel = (props) => {
                                         innerSubmenuIndex === 1 &&
                                         <ul className='inner_submenu w-full pl-3'>
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/flowering"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Flowering Plants
@@ -186,7 +186,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/ornamental"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Ornamental Plants
@@ -194,7 +194,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/fruit-plants"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Fruiting Plants
@@ -202,7 +202,15 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/vegetable-plants"
+                                                    className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
+                                                >
+                                                    Vegetable Plants
+                                                </Link>
+                                            </li>
+
+                                            <li className='list-none relative mb-1'>
+                                                <Link to="/climbers"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Climbers & Creepers
@@ -210,15 +218,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
-                                                    className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
-                                                >
-                                                    Medicinal Plants
-                                                </Link>
-                                            </li>
-
-                                            <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/herbal"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Herbs
@@ -226,7 +226,7 @@ const CategoryPanel = (props) => {
                                             </li>
 
                                             <li className='list-none relative mb-1'>
-                                                <Link to="/"
+                                                <Link to="/bonsai"
                                                     className='link w-full !text-left !justify-start !px-4 transition text-[14px]'
                                                 >
                                                     Bonsai

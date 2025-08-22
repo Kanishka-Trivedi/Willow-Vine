@@ -499,9 +499,9 @@ const Navigation = () => {
                                                 {openSubmenu === "outdoor" && (
                                                     <div className="submenu absolute top-0 left-[100%] min-w-[200px] bg-white shadow-md z-50">
                                                         <ul>
-                                                            <li><Link to="/outdoor-flowering"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Flowering Plants</Button></Link></li>
-                                                            <li><Link to="/medicinal"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Medicinal Plants</Button></Link></li>
-                                                            <li><Link to="/outdoor-bonsai"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Bonsai</Button></Link></li>
+                                                            <li><Link to="/flowering"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Flowering Plants</Button></Link></li>
+                                                            <li><Link to="/herbal"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Medicinal Plants</Button></Link></li>
+                                                            <li><Link to="/bonsai"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Bonsai</Button></Link></li>
                                                             <li><Link to="/fruit-plants"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Fruit Plants</Button></Link></li>
                                                             <li><Link to="/vegetable-plants"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Vegetable Plants</Button></Link></li>
                                                             <li><Link to="/ornamental"><Button className="text-[rgba(0,0,0,0.8)] !rounded-none w-full !text-left !justify-start">Ornamental Plants</Button></Link></li>

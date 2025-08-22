@@ -8,6 +8,24 @@ import ProductSlider from '../components/ProductSlider';
 import axios from "axios";
 import Search from '../components/Search';
 
+const categories = [
+  "All",
+  "Succulents",
+  "Cactus",
+  "Bonsai",
+  "Ornamental Plants",
+  "Flowering Plants",
+  "Herbal Plants",
+  "Fruiting Plants",
+  "Vegetable Plants",
+  "Planters",
+  "Snake Plants",
+  "Gardening Tools",
+  "Accessories",
+  "Seeds",
+  "Soils",
+];
+
 function Home() {
   const [value, setValue] = useState(0);
   const [plants, setPlants] = useState([]);
@@ -28,6 +46,12 @@ function Home() {
     };
     fetchPlants();
   }, []);
+
+  // Show all products if "All" is selected, otherwise filter by category
+  const filteredPlants =
+    value === 0
+      ? plants
+      : plants.filter(plant => plant.category === categories[value]);
 
   return (
     <div>
@@ -66,7 +90,7 @@ function Home() {
             <div className='container'>
               <div className='flex items-center justify-between'>
                 <div className='leftSec'>
-                  <h2 className='text-[20px] font-[600]'>Popular Products</h2>
+                  <h2 className='text-[20px] font-[600]'>{categories[value]} Products</h2>
                   <p className='text-[14px] font-[400]'>Do not miss the current offers until the end of May.</p>
                 </div>
                 <div className='rightSec w-[60%]'>
@@ -82,24 +106,13 @@ function Home() {
                       },
                     }}
                   >
-                    <Tab label="Succulents" />
-                    <Tab label="Planters" />
-                    <Tab label="Cactus" />
-                    <Tab label="Bonsai" />
-                    <Tab label="Snake Plants" />
-                    <Tab label="Show Plants" />
-                    <Tab label="Gardening Tools" />
-                    <Tab label="Accessories" />
-                    <Tab label="Seeds" />
-                    <Tab label="Soils" />
-                    <Tab label="Flowering Plants" />
-                    <Tab label="Herbal Plants" />
-                    <Tab label="Fruiting Plants" />
-                    <Tab label="Vegetable Plants" />
+                    {categories.map((cat, idx) => (
+                      <Tab key={cat} label={cat} />
+                    ))}
                   </Tabs>
                 </div>
               </div>
-              <ProductSlider items={5} products={plants} />
+              <ProductSlider items={5} products={filteredPlants} />
             </div>
           </section>
         </>
@@ -107,4 +120,5 @@ function Home() {
     </div>
   );
 }
+
 export default Home;
