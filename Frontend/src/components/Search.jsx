@@ -32,7 +32,7 @@ const Search = ({ onResults }) => {
     if (!query.trim()) return;
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/plants/search?q=${encodeURIComponent(query)}`
+        `https://willow-vine.onrender.com/api/plants/search?q=${encodeURIComponent(query)}`
       );
       if (onResults) onResults(data);
     } catch (error) {

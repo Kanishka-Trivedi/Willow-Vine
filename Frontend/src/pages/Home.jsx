@@ -38,7 +38,7 @@ function Home() {
   useEffect(() => {
     const fetchPlants = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/plants");
+        const { data } = await axios.get("https://willow-vine.onrender.com/api/plants");
         setPlants(data);
       } catch (error) {
         console.error("Error fetching plants:", error);
