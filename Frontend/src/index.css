@@ -1,157 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+/* ------------------ Tailwind ------------------ */
 @import "tailwindcss";
 
-
-body{
-    font-family: "Montserrat", sans-serif;
-    font-optical-sizing: auto;
-    background-color: #f5f0f0;
-    color: rgba(0, 0, 0, 0.9);
-    overflow-x: hidden;
+/* ------------------ Base Styles ------------------ */
+body {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  background-color: #f5f0f0;
+  color: rgba(0, 0, 0, 0.9);
+  overflow-x: hidden;
 }
 
-::-webkit-scrollbar{width: 10px !important; height: 10px !important;}
-::-webkit-scrollbar-thumb{background: #4CBB17;}
-::-webkit-scrollbar-track{background: #fff;}
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+}
 
-.container{width: 95%; margin: auto;}
+::-webkit-scrollbar-thumb {
+  background: #4CBB17;
+}
 
+::-webkit-scrollbar-track {
+  background: #fff;
+}
 
-.bg-org{background: #4CBB17;}
+/* Container */
+.container {
+  width: 95%;
+  margin: auto;
+}
 
-.link:hover{color: #4CBB17;}
+/* Colors */
+.bg-org {
+  background: #4CBB17;
+}
 
-.MuiBadge-badge{background-color: #4CBB17 !important;}
+.link:hover {
+  color: #4CBB17;
+}
 
-nav button{
-    text-transform: capitalize !important;
-    color: rgba(0, 0, 0, 0.9) !important
+/* ------------------ Material-UI Overrides ------------------ */
+.MuiBadge-badge {
+  background-color: #4CBB17 !important;
+}
+
+nav button {
+  text-transform: capitalize !important;
+  color: rgba(0, 0, 0, 0.9) !important;
 }
 
 .MuiButton-root.nav-button:hover {
-    color: #4CBB17 !important;
-    text-transform: capitalize !important;
+  color: #4CBB17 !important;
+  text-transform: capitalize !important;
 }
 
-.nav li .submenu{
-   visibility: hidden;
-   z-index: 1000; 
+.MuiTabs-indicator {
+  background-color: #4CBB17 !important;
 }
 
-.nav li .submenu button{
-    font-weight: 500 !important;
+.MuiTab-textColorPrimary.Mui-selected {
+  color: #4CBB17 !important;
 }
 
-.nav li:hover .submenu{
-    opacity: 1 !important;
-    visibility: inherit;
-    top:100%;
+/* ------------------ Navbar ------------------ */
+.nav li .submenu {
+  visibility: hidden;
+  z-index: 1000;
 }
 
-.nav li .submenu li:hover button{
-   color:#4CBB17 !important;
+.nav li .submenu button {
+  font-weight: 500 !important;
 }
 
-.nav li .submenu li .submenu{
-    top: 0px !important;
-    left: 120% !important;
-    opacity: 0 !important;
+.nav li:hover .submenu {
+  opacity: 1 !important;
+  visibility: inherit;
+  top: 100%;
 }
 
-.nav li .submenu li:hover .submenu{
-    left: 100% !important;
-    opacity: 1 !important;
+.nav li .submenu li:hover button {
+  color: #4CBB17 !important;
 }
 
-.nav li .submenu li .submenu button{
-    color: rgba(0, 0, 0, 0.80) !important;
+.nav li .submenu li .submenu {
+  top: 0px !important;
+  left: 120% !important;
+  opacity: 0 !important;
 }
 
-.nav li .submenu li .submenu button:hover{
-    color: #4CBB17 !important;
+.nav li .submenu li:hover .submenu {
+  left: 100% !important;
+  opacity: 1 !important;
 }
 
-
-.sliderHome{
-    overflow: inherit !important;
+.nav li .submenu li .submenu button {
+  color: rgba(0, 0, 0, 0.80) !important;
 }
 
-.swiper-button-prev, .swiper-button-next{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    border-radius: 100%;
-    width: 45px;
-    height: 45px;
-    min-width: 45px;
-    box-shadow: 0, 1px, 3px #0000001f, 0 1px 2px #0000003d !important;
+.nav li .submenu li .submenu button:hover {
+  color: #4CBB17 !important;
 }
 
-.swiper-button-prev::after, .swiper-button-next::after{
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #33880b;
+/* ------------------ Slider ------------------ */
+.sliderHome {
+  overflow: inherit !important;
 }
 
-.swiper-button-prev:hover, .swiper-button-next:hover{
-    background: #33880b !important;
+.swiper-button-prev,
+.swiper-button-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 100%;
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  box-shadow: 0, 1px, 3px #0000001f, 0 1px 2px #0000003d !important;
 }
 
-.swiper-button-prev:hover::after, .swiper-button-next:hover::after{
-    color: #fff !important;
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #33880b;
 }
 
-.homeCatSlider items{
-    border: 1px solid rgba(0, 0, 0, 0.1);
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #33880b !important;
 }
 
-.homeCatSlider .item:hover img{
-    transform: scale(1.05);
+.swiper-button-prev:hover::after,
+.swiper-button-next:hover::after {
+  color: #fff !important;
 }
 
-.homeCatSlider .swiper-button-prev, .homeCatSlider .swiper-button-next{
-    width: 25px;
-    height: 25px;
-    min-width: 25px;
-    font-weight: 700 !important;
+/* ------------------ Home Category Slider ------------------ */
+.homeCatSlider items {
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.homeCatSlider .swiper-button-prev::after, .homeCatSlider .swiper-button-next::after{
-    font-size: 15px !important;
-    font-weight: 700 !important;
+.homeCatSlider .item:hover img {
+  transform: scale(1.05);
 }
 
-.homeCatSlider .swiper-button-prev{
-    left: 0px;
+.homeCatSlider .swiper-button-prev,
+.homeCatSlider .swiper-button-next {
+  width: 25px;
+  height: 25px;
+  min-width: 25px;
+  font-weight: 700 !important;
 }
 
-.homeCatSlider .swiper-button-next{
-    right: 0px;
+.homeCatSlider .swiper-button-prev::after,
+.homeCatSlider .swiper-button-next::after {
+  font-size: 15px !important;
+  font-weight: 700 !important;
 }
 
-.homeCatSlider .swiper-button-prev:hover, .homeCatSlider .swiper-button-next:hover{
-    background: #33880b !important;
+.homeCatSlider .swiper-button-prev {
+  left: 0px;
 }
 
-.homeCatSlider .swiper-button-prev:hover::after, .homeCatSlider .swiper-button-next:hover::after{
-    color: #fff !important;
+.homeCatSlider .swiper-button-next {
+  right: 0px;
 }
 
-.MuiTabs-indicator{ background-color: #4CBB17 !important;}
-.MuiTab-textColorPrimary.Mui-selected{ color: #4CBB17 !important;}
-
-
-/* ProductItem.css */
-
-.productItem .title{line-height: 20px;}
-
-.productItem .actions button:hover svg{
-    color: #fff !important;
+.homeCatSlider .swiper-button-prev:hover,
+.homeCatSlider .swiper-button-next:hover {
+  background: #33880b !important;
 }
 
+.homeCatSlider .swiper-button-prev:hover::after,
+.homeCatSlider .swiper-button-next:hover::after {
+  color: #fff !important;
+}
 
-/* ProductSlider.css */
-.productSlider .swiper-wrapper{
-    padding: 15px; 
-    margin-left: -15px; 
-    margin-right: -15px;}
+/* ------------------ Product Item ------------------ */
+.productItem .title {
+  line-height: 20px;
+}
+
+.productItem .actions button:hover svg {
+  color: #fff !important;
+}
+
+/* ------------------ Product Slider ------------------ */
+.productSlider .swiper-wrapper {
+  padding: 15px;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+/* ------------------ Custom Utilities ------------------ */
+@layer utilities {
+
+  /* ✅ Blink Animation */
+  .animate-blink {
+    animation: blink 2.5s infinite;
+  }
+
+  @keyframes blink {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  /* ✅ Custom Fonts as Tailwind Utilities */
+  .font-pacifico {
+    font-family: 'Pacifico', cursive;
+  }
+
+  .font-kalam {
+    font-family: 'Kalam', cursive;
+  }
+
+  .font-patrick {
+    font-family: 'Patrick Hand', cursive;
+  }
+
+  .font-caveat {
+    font-family: 'Caveat', cursive;
+  }
+
+  .font-gloria {
+    font-family: 'Gloria Hallelujah', cursive;
+  }
+
+  .font-gochi {
+    font-family: 'Gochi Hand', cursive;
+  }
+}
