@@ -1,4 +1,5 @@
 import Plant from "../models/Plant.js";
+import asyncHandler from "express-async-handler";
 
 // @desc   Fetch all plants
 // @route  GET /api/plants
@@ -45,5 +46,24 @@ const getPlantById = async (req, res) => {
   }
 };
 
+
+// @desc    Fetch single plant by SLUG (NEW FUNCTION)
+// @route   GET /api/plants/slug/:slug
+// @access  Public
+const getPlantBySlug = asyncHandler(async (req, res) => {
+  // Construct the link field value (e.g., "/product/moonstone")
+  const fullLink = `/product/${req.params.slug}`;
+
+  // Find the plant where the 'link' field matches the fullLink
+  const plant = await Plant.findOne({ link: fullLink });
+
+  if (plant) {
+    res.json(plant);
+  } else {
+    res.status(404);
+    throw new Error("Plant not found with that slug");
+  }
+});
+
 // ✅ Export everything ONCE at the bottom
-export { getPlants, getPlantById, searchPlants };
+export { getPlants, getPlantById, searchPlants, getPlantBySlug};

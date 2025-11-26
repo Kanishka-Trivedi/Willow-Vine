@@ -110,6 +110,7 @@ import PropTypes from 'prop-types';
 const FALLBACK_IMAGE = '/fallback.png'; // Add this file in your public folder
 
 const ProductItem = ({
+    id,
     image,
     title,
     rating = 0,
@@ -198,4 +199,4 @@ ProductItem.propTypes = {
     onCompare: PropTypes.func
 };
 
-export default ProductItem
+export default ProductItem;

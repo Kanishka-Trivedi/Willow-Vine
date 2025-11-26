@@ -15,7 +15,7 @@ import FruitPlants from './pages/FruitPlants';
 import VegetablePlants from './pages/VegetablePlants';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-
+import ProductDetail from './pages/ProductDetail';
 
 function App() {
   return (
@@ -39,6 +39,7 @@ function App() {
           <Route path="/climbers" element={<ClimbersAndCreepers />} />
           <Route path="/fruit-plants" element={<FruitPlants />} />
           <Route path="/vegetable-plants" element={<VegetablePlants />} />
+          <Route path="/product/:slug" element={<ProductDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -24,23 +24,28 @@ const ProductSlider = ({ items = 4, products = [] }) => {
           1024: { slidesPerView: items },
         }}
       >
-        {products.map((p, idx) => (
-          <SwiperSlide key={p.id ?? idx}>
-            <ProductItem
-              image={p.image}
-              title={p.title}
-              rating={p.rating}
-              price={p.price}
-              oldPrice={p.oldPrice}
-              discountLabel={p.discountLabel}
-              link={p.link}
-              onFavorite={() => p.onFavorite?.(p)}
-              onQuickView={() => p.onQuickView?.(p)}
-              onCompare={() => p.onCompare?.(p)}
-              fallbackImage={FALLBACK_IMAGE} // Pass fallback to ProductItem
-            />
-          </SwiperSlide>
-        ))}
+        {products.map((p, idx) => {
+          const pid = p._id || p.id || idx;
+          const productLink = `/product/${pid}`;
+          return (
+            <SwiperSlide key={pid}>
+              <ProductItem
+                id={pid}
+                image={p.image}
+                title={p.title}
+                rating={p.rating}
+                price={p.price}
+                oldPrice={p.oldPrice}
+                discountLabel={p.discountLabel}
+                link={p.link || productLink}
+                onFavorite={() => p.onFavorite?.(p)}
+                onQuickView={() => p.onQuickView?.(p)}
+                onCompare={() => p.onCompare?.(p)}
+                fallbackImage={FALLBACK_IMAGE} // Pass fallback to ProductItem
+              />
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </section>
   );

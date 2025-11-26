@@ -7,3 +7,4 @@ const API = axios.create({
 export const getPlants = () => API.get("/plants");
 export const getPlantById = (id) => API.get(`/plants/${id}`);
 
+export const getPlantBySlug = (slug) => API.get(`/plants/slug/${slug}`);
