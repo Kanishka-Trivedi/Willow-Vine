@@ -1,1 +1,5 @@
 node_modules
+node_modules
+# Credentials and Configuration
+*.json
+.env

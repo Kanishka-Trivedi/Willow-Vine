@@ -16,6 +16,7 @@ import VegetablePlants from './pages/VegetablePlants';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/fruit-plants" element={<FruitPlants />} />
           <Route path="/vegetable-plants" element={<VegetablePlants />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
       </Routes>
     </BrowserRouter>
