@@ -47,6 +47,7 @@ function ProductDetail() {
     try {
       const config = await getAuthHeaders();
 
+      // Use the centralized addToCart function
       const { data } = await addToCart(
         { plantId: plant._id, quantity },
         config
@@ -61,7 +62,6 @@ function ProductDetail() {
         alert('Please log in to add items to your cart.');
         navigate('/login');
       } else {
-        // Log server's detailed error message if available
         alert(error.response?.data?.message || 'Failed to add item to cart');
       }
     }
@@ -93,7 +93,6 @@ function ProductDetail() {
     );
   }
 
-  // Logic to disable buttons while loading or if out of stock
   const isButtonDisabled = loading || !plant || !inStock;
 
   return (
