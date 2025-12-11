@@ -47,7 +47,6 @@ function ProductDetail() {
     try {
       const config = await getAuthHeaders();
 
-      // Use the centralized addToCart function
       const { data } = await addToCart(
         { plantId: plant._id, quantity },
         config
@@ -62,6 +61,7 @@ function ProductDetail() {
         alert('Please log in to add items to your cart.');
         navigate('/login');
       } else {
+        // Log server's detailed error message if available
         alert(error.response?.data?.message || 'Failed to add item to cart');
       }
     }
@@ -69,7 +69,6 @@ function ProductDetail() {
 
 
   const handleBuyNow = () => {
-    // Reusing the cart logic for "Buy Now" flow
     handleAddToCart().then(() => {
       navigate('/checkout');
     }).catch(err => {
@@ -93,6 +92,9 @@ function ProductDetail() {
       </div>
     );
   }
+
+  // Logic to disable buttons while loading or if out of stock
+  const isButtonDisabled = loading || !plant || !inStock;
 
   return (
     <div className="flex flex-col md:flex-row gap-15 bg-white p-6 min-h-screen">
@@ -177,7 +179,7 @@ function ProductDetail() {
         {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
-          disabled={!inStock}
+          disabled={isButtonDisabled}
           className="w-3/4 bg-[#008000] text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-300 shadow-md mb-4 text-lg disabled:bg-gray-400 flex items-center justify-center space-x-2"
         >
           <FaShoppingCart /> <span>Add to Cart</span>
@@ -187,7 +189,7 @@ function ProductDetail() {
         {/* Buy Now Button */}
         <button
           onClick={handleBuyNow}
-          disabled={!inStock}
+          disabled={isButtonDisabled}
           className="w-3/4 bg-[#70e000] text-white font-bold py-3 px-4 rounded-lg hover:bg-[#9ef01a] transition duration-300 shadow-md text-lg disabled:bg-gray-400 flex items-center justify-center space-x-2"
         >
           <FaBolt /> <span>Buy Now</span>
