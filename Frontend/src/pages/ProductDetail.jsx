@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getPlantBySlug } from '../api';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getAuthHeaders } from '../auth';
+import { getPlantBySlug, addToCart } from '../api';
 import Rating from '@mui/material/Rating';
 import { FaSpinner, FaShoppingCart, FaBolt } from 'react-icons/fa';
 
 const FALLBACK_IMAGE = '/fallback.png';
 
 function ProductDetail() {
-  // 💡 Retrieves the 'slug' from the URL (e.g., 'moonstone')
   const { slug } = useParams();
   const [plant, setPlant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
-  // 'inStock' is missing in your Plant model, 
-  // so we assume it's available (true) for now.
   const inStock = true;
 
   useEffect(() => {
@@ -26,7 +25,6 @@ function ProductDetail() {
       setQuantity(1);
 
       try {
-        // 💡 Uses the working getPlantBySlug API call
         const response = await getPlantBySlug(slug);
         setPlant(response.data);
       } catch (err) {
@@ -42,20 +40,43 @@ function ProductDetail() {
     }
   }, [slug]);
 
-  // --- Handlers for Cart/Buy ---
-  const handleAddToCart = () => {
-    if (plant) {
+
+  const handleAddToCart = async () => {
+    if (!plant) return;
+
+    try {
+      const config = await getAuthHeaders();
+
+      // Use the centralized addToCart function
+      const { data } = await addToCart(
+        { plantId: plant._id, quantity },
+        config
+      );
+
+      console.log('Added to cart:', data);
       alert(`✅ Added ${quantity} x ${plant.title} to your cart!`);
+      navigate('/cart');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      if (error.message.includes("not authenticated") || error.response?.status === 401) {
+        alert('Please log in to add items to your cart.');
+        navigate('/login');
+      } else {
+        alert(error.response?.data?.message || 'Failed to add item to cart');
+      }
     }
   };
+
 
   const handleBuyNow = () => {
-    if (plant) {
-      alert(`💸 Redirecting to checkout for ${plant.title}...`);
-    }
+    // Reusing the cart logic for "Buy Now" flow
+    handleAddToCart().then(() => {
+      navigate('/checkout');
+    }).catch(err => {
+      console.error("Buy Now failed: ", err);
+    });
   };
 
-  // --- Loading/Error States ---
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -73,7 +94,6 @@ function ProductDetail() {
     );
   }
 
-  // --- Render Product Details ---
   return (
     <div className="flex flex-col md:flex-row gap-15 bg-white p-6 min-h-screen">
 
@@ -148,11 +168,10 @@ function ProductDetail() {
         </div>
 
         {/* Info Section */}
-        <ul class="list-disc list-inside space-y-2 mt-4 mb-5 text-gray-700 text-md">
+        <ul className="list-disc list-inside space-y-2 mt-4 mb-5 text-gray-700 text-md">
           <li>5-Day Easy Returns — Unboxing video required</li>
           <li>Free Shipping on orders above ₹249</li>
         </ul>
-
 
 
         {/* Add to Cart Button */}
@@ -175,9 +194,7 @@ function ProductDetail() {
         </button>
 
 
-
         <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-700">Description</h2>
-        {/* ⚠️ Placeholder: The 'description' field is missing from your backend schema. */}
         <p className="text-gray-600 mb-8 leading-relaxed text-lg whitespace-pre-line border-l-4 border-yellow-400 pl-3 bg-yellow-50 p-2 rounded-md">
           This is a placeholder description. To display actual product details here, please update your **Backend/models/Plant.js** file to include a `description` field.
         </p>

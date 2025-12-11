@@ -234,11 +234,13 @@ function Header() {
                                 </IconButton>
                             </li>
                             <li>
-                                <IconButton aria-label="cart">
-                                    <StyledBadge badgeContent={4} color="secondary">
-                                        <IoCartOutline style={{ fontSize: '23px' }} />
-                                    </StyledBadge>
-                                </IconButton>
+                                <Link to="/cart">
+                                    <IconButton aria-label="cart">
+                                        <StyledBadge badgeContent={4} color="secondary">
+                                            <IoCartOutline style={{ fontSize: '23px' }} />
+                                        </StyledBadge>
+                                    </IconButton>
+                                </Link>
                             </li>
                         </ul>
                     </div>

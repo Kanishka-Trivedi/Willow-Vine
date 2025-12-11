@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import MainLayout from '../components/MainLayout';
-// Import or define your getAuthHeaders function here
-const getAuthHeaders = async () => { 
-    const token = localStorage.getItem('firebaseToken'); 
-    if (!token) throw new Error("User not authenticated.");
-    return { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } };
-};
-// ------------------------------------------------------------------------------------------------
-
-const API_BASE_URL = '/api';
+import { getAuthHeaders } from '../auth';
+import { getCart, removeFromCart, updateCartItemQuantity } from '../api';
 
 const CartPage = () => {
   const [cart, setCart] = useState({ cartItems: [] });
@@ -19,6 +11,8 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   const calculateSubtotal = (items) => {
+    if (!items || items.length === 0) return '0.00';
+    
     return items.reduce(
       (acc, item) => acc + (parseFloat(item.plant.price) * item.quantity),
       0
@@ -29,11 +23,12 @@ const CartPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const config = await getAuthHeaders(); // Get authenticated headers
-      const { data } = await axios.get(`${API_BASE_URL}/cart`, config);
+      const config = await getAuthHeaders();
+      const { data } = await getCart(config);
       setCart(data);
     } catch (err) {
       if (err.message.includes("not authenticated") || err.response?.status === 401) {
+        setCart({ cartItems: [] }); 
         navigate('/login');
       }
       setError(err.response?.data?.message || err.message || 'Failed to fetch cart');
@@ -49,7 +44,7 @@ const CartPage = () => {
   const removeItemHandler = async (plantId) => {
     try {
       const config = await getAuthHeaders();
-      const { data } = await axios.delete(`${API_BASE_URL}/cart/${plantId}`, config);
+      const { data } = await removeFromCart(plantId, config); 
       setCart(data);
     } catch (err) {
       console.error('Error removing item:', err);
@@ -66,8 +61,8 @@ const CartPage = () => {
 
     try {
       const config = await getAuthHeaders();
-      const { data } = await axios.put(
-        `${API_BASE_URL}/cart/${plantId}`,
+      const { data } = await updateCartItemQuantity(
+        plantId,
         { quantity },
         config 
       );
@@ -80,12 +75,15 @@ const CartPage = () => {
   if (loading) return <MainLayout><div className="text-center py-10">Loading cart...</div></MainLayout>;
   if (error && !error.includes("not authenticated")) return <MainLayout><div className="text-center py-10 text-red-500">Error: {error}</div></MainLayout>;
 
+  const cartItems = cart?.cartItems || [];
+  const isCartEmpty = cartItems.length === 0;
+
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 border-b pb-2">Shopping Cart</h1>
 
-        {cart.cartItems.length === 0 ? (
+        {isCartEmpty ? (
           <div className="text-center p-10 bg-gray-50 rounded-lg shadow-inner">
             <p className="text-xl text-gray-600 mb-4">Your cart is empty.</p>
             <Link to="/" className="text-green-600 hover:text-green-800 font-semibold">
@@ -97,7 +95,7 @@ const CartPage = () => {
             {/* Cart Items List */}
             <div className="lg:w-3/4">
               <div className="space-y-4">
-                {cart.cartItems.map((item) => (
+                {cartItems.map((item) => (
                   <div
                     key={item.plant._id}
                     className="flex items-center border rounded-lg p-4 shadow-sm"
@@ -162,13 +160,13 @@ const CartPage = () => {
                   Order Summary
                 </h2>
                 <div className="flex justify-between text-lg font-medium mb-3">
-                  <span>Subtotal ({cart.cartItems.reduce((acc, item) => acc + item.quantity, 0)}) items:</span>
-                  <span>${calculateSubtotal(cart.cartItems)}</span>
+                  <span>Subtotal ({cartItems.reduce((acc, item) => acc + item.quantity, 0)}) items:</span>
+                  <span>${calculateSubtotal(cartItems)}</span>
                 </div>
                 <button
                   onClick={() => navigate('/checkout')} 
                   className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
-                  disabled={cart.cartItems.length === 0}
+                  disabled={isCartEmpty}
                 >
                   Proceed to Checkout
                 </button>

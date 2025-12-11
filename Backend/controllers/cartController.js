@@ -10,6 +10,7 @@ const getCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user.uid }).populate({
     path: 'cartItems.plant',
     model: 'Plant',
+    // Select the necessary fields to display on the frontend
     select: 'title image price oldPrice discountLabel link', 
   });
 
@@ -27,27 +28,39 @@ const getCart = asyncHandler(async (req, res) => {
 const addToCart = asyncHandler(async (req, res) => {
   const { plantId, quantity } = req.body;
 
-  // ... (validation code remains the same)
+  // --- START VALIDATION ---
+  if (!plantId || typeof quantity !== 'number' || quantity <= 0) {
+    res.status(400);
+    throw new Error('Invalid plant ID or quantity. Quantity must be a positive number.');
+  }
+
+  const plant = await Plant.findById(plantId);
+
+  if (!plant) {
+    res.status(404);
+    throw new Error('Plant not found');
+  }
+  // --- END VALIDATION ---
 
   let cart = await Cart.findOne({ user: req.user.uid }); // Find by UID
 
   if (cart) {
-    // ... (logic to update existing item or push new item remains the same)
-    
-    // Check if item is already in cart
+    // Cart exists, check if item is already in cart
     const itemIndex = cart.cartItems.findIndex(
       (item) => item.plant.toString() === plantId
     );
 
     if (itemIndex > -1) {
+      // Item exists, update quantity by adding the new quantity
       cart.cartItems[itemIndex].quantity += quantity;
     } else {
+      // Item does not exist, add new item
       cart.cartItems.push({ plant: plantId, quantity });
     }
 
     await cart.save();
   } else {
-    // Create a new cart using the Firebase UID
+    // No cart exists for this user, create a new one
     cart = await Cart.create({
       user: req.user.uid, 
       cartItems: [{ plant: plantId, quantity }],
@@ -69,11 +82,43 @@ const addToCart = asyncHandler(async (req, res) => {
 // @access  Private
 const removeFromCart = asyncHandler(async (req, res) => {
   const { plantId } = req.params;
+  
+  // --- START VALIDATION ---
+  if (!plantId) {
+    res.status(400);
+    throw new Error('Plant ID is required to remove item.');
+  }
+  // --- END VALIDATION ---
 
   let cart = await Cart.findOne({ user: req.user.uid }); // Find by UID
 
-  // ... (rest of logic remains the same)
-  // ... (save and populate)
+  if (cart) {
+    const initialLength = cart.cartItems.length;
+
+    // Filter out the item to be removed
+    cart.cartItems = cart.cartItems.filter(
+      (item) => item.plant.toString() !== plantId
+    );
+
+    if (cart.cartItems.length === initialLength) {
+        res.status(404);
+        throw new Error('Item not found in cart.');
+    }
+
+    await cart.save();
+
+    // Populate and send back the updated cart
+    await cart.populate({
+      path: 'cartItems.plant',
+      model: 'Plant',
+      select: 'title image price oldPrice discountLabel link',
+    });
+
+    res.json(cart);
+  } else {
+    res.status(404);
+    throw new Error('Cart not found');
+  }
 });
 
 // @desc    Update quantity of a single item in cart
@@ -83,12 +128,40 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
   const { plantId } = req.params;
   const { quantity } = req.body;
 
-  // ... (validation code remains the same)
+  // --- START VALIDATION ---
+  if (typeof quantity !== 'number' || quantity <= 0) {
+    res.status(400);
+    throw new Error('Invalid quantity. Quantity must be a positive number.');
+  }
+  // --- END VALIDATION ---
 
   let cart = await Cart.findOne({ user: req.user.uid }); // Find by UID
 
-  // ... (rest of logic remains the same)
-  // ... (update quantity, save and populate)
+  if (cart) {
+    const itemIndex = cart.cartItems.findIndex(
+      (item) => item.plant.toString() === plantId
+    );
+
+    if (itemIndex > -1) {
+      cart.cartItems[itemIndex].quantity = quantity;
+      await cart.save();
+
+      // Populate and send back the updated cart
+      await cart.populate({
+        path: 'cartItems.plant',
+        model: 'Plant',
+        select: 'title image price oldPrice discountLabel link',
+      });
+
+      res.json(cart);
+    } else {
+      res.status(404);
+      throw new Error('Item not found in cart');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Cart not found');
+  }
 });
 
 export { getCart, addToCart, removeFromCart, updateCartItemQuantity };
