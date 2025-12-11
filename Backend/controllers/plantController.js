@@ -51,19 +51,18 @@ const getPlantById = async (req, res) => {
 // @route   GET /api/plants/slug/:slug
 // @access  Public
 const getPlantBySlug = asyncHandler(async (req, res) => {
-  // Construct the link field value (e.g., "/product/moonstone")
-  const fullLink = `/product/${req.params.slug}`;
+  const slug = req.params.slug;
 
-  // Find the plant where the 'link' field matches the fullLink
-  const plant = await Plant.findOne({ link: fullLink });
+  // More forgiving matching:
+  const plant = await Plant.findOne({
+    link: { $regex: `${slug}$`, $options: "i" }
+  }).select("_id title image rating oldPrice price discountLabel link category description");
 
-  if (plant) {
-    res.json(plant);
-  } else {
+  if (!plant) {
     res.status(404);
     throw new Error("Plant not found with that slug");
   }
-});
 
-// ✅ Export everything ONCE at the bottom
-export { getPlants, getPlantById, searchPlants, getPlantBySlug};
+  res.json(plant);
+});
+export { getPlants, searchPlants, getPlantById, getPlantBySlug };

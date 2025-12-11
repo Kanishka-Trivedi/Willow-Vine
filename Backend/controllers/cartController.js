@@ -175,70 +175,101 @@ import asyncHandler from 'express-async-handler';
 import Cart from '../models/Cart.js';
 import Plant from '../models/Plant.js';
 
+// --------------------------------------------------
+// GET CART
+// --------------------------------------------------
 const getCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user.uid }).populate({
     path: 'cartItems.plant',
     model: 'Plant',
-    select: 'title image price oldPrice discountLabel link', 
+    select: 'title image price oldPrice discountLabel link',
   });
 
   if (cart) {
-    res.json(cart);
-  } else {
-    res.json({ user: req.user.uid, cartItems: [] });
+    return res.json(cart);
   }
+
+  res.json({ user: req.user.uid, cartItems: [] });
 });
 
+// --------------------------------------------------
+// ADD TO CART
+// --------------------------------------------------
 const addToCart = asyncHandler(async (req, res) => {
-  const { plantId, quantity } = req.body;
+  let { plantId, quantity } = req.body;
 
-  console.log('Received payload for addToCart:', { plantId, quantity, userId: req.user.uid });
+  console.log('ADD TO CART REQUEST:', {
+    body: req.body,
+    types: { plantId: typeof plantId, quantity: typeof quantity },
+    uid: req.user?.uid,
+  });
 
-  if (!plantId || typeof quantity !== 'number' || quantity <= 0) {
+  // --- VALIDATION ---
+  if (!plantId) {
     res.status(400);
-    throw new Error('Invalid plant ID or quantity. Quantity must be a positive number.');
+    throw new Error('Missing plantId in request body.');
   }
 
-  const plant = await Plant.findById(plantId);
+  // Quantity conversion (string → number)
+  if (typeof quantity === 'string') {
+    if (!/^\d+$/.test(quantity.trim())) {
+      res.status(400);
+      throw new Error('Quantity must be a valid positive number.');
+    }
+    quantity = Number(quantity);
+  }
 
+  // Final numeric validation
+  if (typeof quantity !== 'number' || Number.isNaN(quantity) || quantity <= 0) {
+    res.status(400);
+    throw new Error('Invalid quantity. Must be a positive number.');
+  }
+
+  // Check if plant exists
+  const plant = await Plant.findById(plantId);
   if (!plant) {
     res.status(404);
-    throw new Error('Plant not found');
+    throw new Error('Plant not found.');
   }
 
+  // ---------------------------------------
+  // Find or create user cart
+  // ---------------------------------------
   let cart = await Cart.findOne({ user: req.user.uid });
 
   if (cart) {
-    const itemIndex = cart.cartItems.findIndex(
+    const index = cart.cartItems.findIndex(
       (item) => item.plant.toString() === plantId
     );
 
-    if (itemIndex > -1) {
-      cart.cartItems[itemIndex].quantity += quantity;
+    if (index > -1) {
+      cart.cartItems[index].quantity += quantity; // Update existing
     } else {
-      cart.cartItems.push({ plant: plantId, quantity });
+      cart.cartItems.push({ plant: plantId, quantity }); // Add new item
     }
-
-    await cart.save();
   } else {
     cart = await Cart.create({
-      user: req.user.uid, 
+      user: req.user.uid,
       cartItems: [{ plant: plantId, quantity }],
     });
   }
 
+  await cart.save();
+
   await cart.populate({
     path: 'cartItems.plant',
-    model: 'Plant',
     select: 'title image price oldPrice discountLabel link',
   });
 
   res.status(201).json(cart);
 });
 
+// --------------------------------------------------
+// REMOVE FROM CART
+// --------------------------------------------------
 const removeFromCart = asyncHandler(async (req, res) => {
   const { plantId } = req.params;
-  
+
   if (!plantId) {
     res.status(400);
     throw new Error('Plant ID is required to remove item.');
@@ -246,36 +277,48 @@ const removeFromCart = asyncHandler(async (req, res) => {
 
   let cart = await Cart.findOne({ user: req.user.uid });
 
-  if (cart) {
-    const initialLength = cart.cartItems.length;
-
-    cart.cartItems = cart.cartItems.filter(
-      (item) => item.plant.toString() !== plantId
-    );
-
-    if (cart.cartItems.length === initialLength) {
-        res.status(404);
-        throw new Error('Item not found in cart.');
-    }
-
-    await cart.save();
-
-    await cart.populate({
-      path: 'cartItems.plant',
-      model: 'Plant',
-      select: 'title image price oldPrice discountLabel link',
-    });
-
-    res.json(cart);
-  } else {
+  if (!cart) {
     res.status(404);
-    throw new Error('Cart not found');
+    throw new Error('Cart not found.');
   }
+
+  const initialLength = cart.cartItems.length;
+
+  // filter out item
+  cart.cartItems = cart.cartItems.filter(
+    (item) => item.plant.toString() !== plantId
+  );
+
+  if (cart.cartItems.length === initialLength) {
+    res.status(404);
+    throw new Error('Item not found in cart.');
+  }
+
+  await cart.save();
+
+  await cart.populate({
+    path: 'cartItems.plant',
+    select: 'title image price oldPrice discountLabel link',
+  });
+
+  res.json(cart);
 });
 
+// --------------------------------------------------
+// UPDATE QUANTITY
+// --------------------------------------------------
 const updateCartItemQuantity = asyncHandler(async (req, res) => {
   const { plantId } = req.params;
-  const { quantity } = req.body;
+  let { quantity } = req.body;
+
+  // Convert string quantities
+  if (typeof quantity === 'string') {
+    if (!/^\d+$/.test(quantity.trim())) {
+      res.status(400);
+      throw new Error('Quantity must be a valid positive number.');
+    }
+    quantity = Number(quantity);
+  }
 
   if (typeof quantity !== 'number' || quantity <= 0) {
     res.status(400);
@@ -284,30 +327,29 @@ const updateCartItemQuantity = asyncHandler(async (req, res) => {
 
   let cart = await Cart.findOne({ user: req.user.uid });
 
-  if (cart) {
-    const itemIndex = cart.cartItems.findIndex(
-      (item) => item.plant.toString() === plantId
-    );
-
-    if (itemIndex > -1) {
-      cart.cartItems[itemIndex].quantity = quantity;
-      await cart.save();
-
-      await cart.populate({
-        path: 'cartItems.plant',
-        model: 'Plant',
-        select: 'title image price oldPrice discountLabel link',
-      });
-
-      res.json(cart);
-    } else {
-      res.status(404);
-      throw new Error('Item not found in cart');
-    }
-  } else {
+  if (!cart) {
     res.status(404);
-    throw new Error('Cart not found');
+    throw new Error('Cart not found.');
   }
+
+  const index = cart.cartItems.findIndex(
+    (item) => item.plant.toString() === plantId
+  );
+
+  if (index === -1) {
+    res.status(404);
+    throw new Error('Item not found in cart.');
+  }
+
+  cart.cartItems[index].quantity = quantity;
+  await cart.save();
+
+  await cart.populate({
+    path: 'cartItems.plant',
+    select: 'title image price oldPrice discountLabel link',
+  });
+
+  res.json(cart);
 });
 
 export { getCart, addToCart, removeFromCart, updateCartItemQuantity };
