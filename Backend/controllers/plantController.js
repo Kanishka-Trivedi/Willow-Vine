@@ -55,7 +55,7 @@ const getPlantBySlug = asyncHandler(async (req, res) => {
 
   // More forgiving matching:
   const plant = await Plant.findOne({
-    link: { $regex: `${slug}$`, $options: "i" }
+    link: `/product/${slug}`
   }).select("_id title image rating oldPrice price discountLabel link category description");
 
   if (!plant) {

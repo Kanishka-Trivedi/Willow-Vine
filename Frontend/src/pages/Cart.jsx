@@ -79,7 +79,6 @@ const CartPage = () => {
   const isCartEmpty = cartItems.length === 0;
 
   return (
-    <MainLayout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 border-b pb-2">Shopping Cart</h1>
 
@@ -175,7 +174,6 @@ const CartPage = () => {
           </div>
         )}
       </div>
-    </MainLayout>
   );
 };
 
