@@ -289,7 +289,7 @@ function ProductDetail() {
       console.log("🛒 Cart updated →", data);
       alert(`✔ Added ${quantity} x ${plant.title} to your cart!`);
 
-      navigate('/cart');
+
 
     } catch (error) {
       console.error("❌ Add to cart error:", error.response?.data || error.message);
@@ -346,7 +346,7 @@ function ProductDetail() {
             MAIN UI
   ------------------------------*/
   return (
-    <div className="flex flex-col md:flex-row gap-15 bg-white p-6 min-h-screen">
+    <div className="flex flex-col md:flex-row gap-0 bg-white p-6 min-h-screen">
 
       {/* Product Image */}
       <div className="md:w-1/2 p-4">
@@ -425,10 +425,11 @@ function ProductDetail() {
           <FaBolt /> <span>Buy Now</span>
         </button>
 
-        <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-700">Description</h2>
+        {/* Description */}
+        <h2 className="text-2xl font-bold mt-9 mb-3 text-gray-700">Description</h2>
 
-        <p className="text-gray-600 mb-8 leading-relaxed text-lg whitespace-pre-line border-l-4 border-yellow-400 pl-3 bg-yellow-50 p-2 rounded-md">
-          This is a placeholder description. Add real details in your backend Plant model.
+        <p className="text-gray-600 mb-8 leading-relaxed text-lg">
+          {plant.description}
         </p>
       </div>
     </div>
