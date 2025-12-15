@@ -17,6 +17,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/Cart';
+import Address from './pages/Address';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/vegetable-plants" element={<VegetablePlants />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/addresses" element={<Address />} />
         </Route>
       </Routes>
     </BrowserRouter>

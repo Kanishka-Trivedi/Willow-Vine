@@ -6,6 +6,7 @@ import plantRoutes from "./routes/plantRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import initializeFirebaseAdmin from "./config/firebaseAdmin.js";
+import addressRoutes from "./routes/addressRoutes.js"; // <-- NEW IMPORT
 
 dotenv.config();
 connectDB();
@@ -23,6 +24,7 @@ app.use(cors({
 // Routes
 app.use("/api/plants", plantRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/addresses", addressRoutes); // <-- NEW ROUTE ADDED
 
 // Error Middleware
 app.use(notFound);

@@ -420,7 +420,7 @@ const CartPage = () => {
                 </div>
                 
                 <button
-                  onClick={() => navigate('/checkout')} 
+                  onClick={() => navigate('/address')} 
                   className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
                   disabled={isCartEmpty}
                 >
