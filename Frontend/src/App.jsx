@@ -17,7 +17,6 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/Cart';
-import CheckoutPage from './pages/Checkout';
 
 function App() {
   return (
@@ -43,7 +42,6 @@ function App() {
           <Route path="/vegetable-plants" element={<VegetablePlants />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} /> {/* <-- NEW PROTECTED ROUTE */}
         </Route>
       </Routes>
     </BrowserRouter>
