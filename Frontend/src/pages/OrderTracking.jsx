@@ -101,7 +101,9 @@ const OrderTracking = () => {
                                 <div 
                                     key={order._id}
                                     onClick={() => navigate(`/order-confirmation/${order._id}`)}
+
                                     className="group relative bg-white rounded-[40px] overflow-hidden shadow-sm hover:shadow-2xl hover:border-green-200 border border-gray-100 transition-all duration-700 cursor-pointer flex flex-col lg:flex-row items-center"
+
                                 >
                                     {/* Product Visual */}
                                     <div className="p-10 flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-10 flex-grow w-full">

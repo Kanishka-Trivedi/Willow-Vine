@@ -82,11 +82,13 @@ const OrderConfirmation = () => {
 
                     <div className="mt-12 space-y-4">
                         <Link 
-                            to="/" 
+                            to={`/track-order/${id}`} 
                             className="bg-[#ff7f50] text-white px-10 py-5 rounded-2xl font-bold hover:brightness-110 transition shadow-xl inline-block w-full text-center sm:w-auto uppercase tracking-widest text-sm"
                         >
                             Track Your Order
                         </Link>
+
+
                         <p className="text-xs text-gray-600 font-medium italic block mt-6">
                             A copy of your receipt was sent to your email.
                         </p>

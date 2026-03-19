@@ -20,16 +20,21 @@ import CartPage from './pages/Cart';
 import Address from './pages/Address';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrderTracking from './pages/OrderTracking';
+import OrderDetail from './pages/OrderDetail';
+import ScrollToTop from './components/ScrollToTop';
 import { CartProvider } from './context/CartContext';
+
+
 
 
 
 function App() {
   return (
     <CartProvider>
-      <BrowserRouter>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
 
-      <Routes>
         {/* Auth routes without Header/Footer */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -53,6 +58,8 @@ function App() {
           <Route path="/addresses" element={<Address />} />
           <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
           <Route path="/order-tracking" element={<OrderTracking />} />
+          <Route path="/track-order/:id" element={<OrderDetail />} />
+
 
 
         </Route>
