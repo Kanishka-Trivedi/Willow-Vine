@@ -18,10 +18,17 @@ import Signup from './pages/Signup';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/Cart';
 import Address from './pages/Address';
+import OrderConfirmation from './pages/OrderConfirmation';
+import OrderTracking from './pages/OrderTracking';
+import { CartProvider } from './context/CartContext';
+
+
 
 function App() {
   return (
-    <BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+
       <Routes>
         {/* Auth routes without Header/Footer */}
         <Route path="/login" element={<Login />} />
@@ -44,10 +51,16 @@ function App() {
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/addresses" element={<Address />} />
+          <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
+          <Route path="/order-tracking" element={<OrderTracking />} />
+
+
         </Route>
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
+
 
 export default App;

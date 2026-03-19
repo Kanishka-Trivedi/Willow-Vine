@@ -202,8 +202,7 @@ const Address = () => {
             // This is the call to the future order API
             const { data } = await createOrder(orderData, config);
             
-            alert(`Order ${data._id} placed successfully!`);
-            navigate(`/`); 
+            navigate(`/order-confirmation/${data._id}`); 
 
         } catch (err) {
             // --- DETAILED ERROR LOGGING FOR ORDER PLACEMENT START ---

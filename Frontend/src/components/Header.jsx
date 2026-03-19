@@ -127,6 +127,8 @@ import { FaRegHeart } from "react-icons/fa";
 import Navigation from './Navigation';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase'; // Ensure this path is correct
+import { useCart } from '../context/CartContext';
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -139,7 +141,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 function Header() {
     const [user, setUser] = useState(null);
+    const { cartCount } = useCart();
     const navigate = useNavigate();
+
 
     // Listen for authentication state changes
     useEffect(() => {
@@ -192,15 +196,23 @@ function Header() {
 
             {/* Main Header */}
             <div className='header py-4 border-t-[1px] border-gray-200 border-b-[2px]'>
-                <div className='container flex items-center justify-between'>
-                    <div className='col1 w-[20%]'>
-                        <Link to="/"><img src='/logo.png' height={"70px"} width={"150px"} alt="Willow Vine Logo" /></Link>
+                <div className='container flex items-center'>
+                    {/* Logo Section */}
+                    <div className='col1 w-[20%] min-w-[150px]'>
+                        <Link to="/">
+                            <img src='/logo.png' height={"70px"} width={"150px"} alt="Willow Vine Logo" />
+                        </Link>
                     </div>
-                    <div className='col2 ml-15 w-[55%]'>
+
+                    {/* Tagline Section - Centered */}
+                    <div className='col2 flex-grow flex justify-center overflow-hidden'>
                         <TaglineSlider />
                     </div>
-                    <div className='col3 w-[35%] flex items-center pl-8'>
-                        <ul className='flex items-center justify-end gap-4 w-full'>
+
+                    {/* Actions Section */}
+                    <div className='col3 w-[30%] flex items-center justify-end'>
+                        <ul className='flex items-center justify-end gap-3 w-full'>
+
                             {/* Conditional Rendering for Auth Buttons */}
                             {user ? (
                                 <li className="list-none">
@@ -236,10 +248,11 @@ function Header() {
                             <li>
                                 <Link to="/cart">
                                     <IconButton aria-label="cart">
-                                        <StyledBadge badgeContent={4} color="secondary">
+                                        <StyledBadge badgeContent={cartCount} color="secondary">
                                             <IoCartOutline style={{ fontSize: '23px' }} />
                                         </StyledBadge>
                                     </IconButton>
+
                                 </Link>
                             </li>
                         </ul>

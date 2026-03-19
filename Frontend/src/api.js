@@ -61,8 +61,9 @@ import axios from "axios";
 // Since you are using a static URL here, we will stick to it
 // for consistency across all calls.
 export const API = axios.create({
-  baseURL: "https://willow-vine.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://willow-vine.onrender.com/api",
 });
+
 
 // ------------------------------------
 // PLANTS
@@ -113,3 +114,6 @@ export const createOrder = async (order, config) => {
     // Use API.post() instead of axios.post() and remove BASE_URL
     return API.post("/orders", order, config);
 };
+
+export const getOrderById = (id, config) => API.get(`/orders/${id}`, config);
+export const getMyOrders = (config) => API.get('/orders/myorders', config);

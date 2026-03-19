@@ -218,16 +218,20 @@ import { getAuthHeaders } from '../auth';
 import { getPlantBySlug, addToCart } from '../api';
 import Rating from '@mui/material/Rating';
 import { FaSpinner, FaShoppingCart, FaBolt } from 'react-icons/fa';
+import { useCart } from '../context/CartContext';
+
 
 const FALLBACK_IMAGE = '/fallback.png';
 
 function ProductDetail() {
   const { slug } = useParams();
+  const { fetchCartCount } = useCart();
   const [plant, setPlant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+
 
   const inStock = true;
 
@@ -288,6 +292,8 @@ function ProductDetail() {
 
       console.log("🛒 Cart updated →", data);
       alert(`✔ Added ${quantity} x ${plant.title} to your cart!`);
+      fetchCartCount(); // REFRESH HEADER COUNT
+
 
 
 

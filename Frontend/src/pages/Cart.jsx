@@ -219,9 +219,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getAuthHeaders } from '../auth';
 import { getCart, removeFromCart, updateCartItemQuantity } from '../api';
 import { FaTrashAlt } from 'react-icons/fa';
+import { useCart } from '../context/CartContext';
 
 const CartPage = () => {
+  const { fetchCartCount } = useCart();
   const [cart, setCart] = useState({ cartItems: [] });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -265,6 +268,7 @@ const CartPage = () => {
       const config = await getAuthHeaders();
       const { data } = await removeFromCart(plantId, config); 
       setCart(data);
+      fetchCartCount(); // REFRESH HEADER COUNT
     } catch (err) {
       console.error('Error removing item:', err);
     }
@@ -286,6 +290,7 @@ const CartPage = () => {
         config 
       );
       setCart(data);
+      fetchCartCount(); // REFRESH HEADER COUNT
     } catch (err) {
       console.error('Error updating quantity:', err);
     }
@@ -420,7 +425,7 @@ const CartPage = () => {
                 </div>
                 
                 <button
-                  onClick={() => navigate('/address')} 
+                  onClick={() => navigate('/addresses')} 
                   className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
                   disabled={isCartEmpty}
                 >

@@ -1,3 +1,6 @@
+import dns from "node:dns";
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "8.8.4.4"]); // Add Google DNS fallback for SRV resolution issues
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -7,6 +10,8 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import initializeFirebaseAdmin from "./config/firebaseAdmin.js";
 import addressRoutes from "./routes/addressRoutes.js"; // <-- NEW IMPORT
+import orderRoutes from "./routes/orderRoutes.js"; // <-- NEW IMPORT
+
 
 dotenv.config();
 connectDB();
@@ -25,6 +30,8 @@ app.use(cors({
 app.use("/api/plants", plantRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/addresses", addressRoutes); // <-- NEW ROUTE ADDED
+app.use("/api/orders", orderRoutes); // <-- NEW ROUTE ADDED
+
 
 // Error Middleware
 app.use(notFound);
