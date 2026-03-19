@@ -319,12 +319,15 @@ function ProductDetail() {
   ------------------------------*/
   const handleBuyNow = async () => {
     try {
+      // First add to cart
       await handleAddToCart();
-      navigate('/checkout');
+      // Then navigate to the addresses/checkout page
+      navigate('/addresses');
     } catch (err) {
       console.error("❌ Buy Now error:", err);
     }
   };
+
 
 
   /* -----------------------------

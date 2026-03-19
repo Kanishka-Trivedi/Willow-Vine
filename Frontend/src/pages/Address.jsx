@@ -3,8 +3,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthHeaders } from '../auth';
-import { getCart, getAddresses, addAddress, deleteAddress, createOrder } from '../api';
-import { FaSpinner, FaMapMarkerAlt, FaPlus, FaTimes, FaTrashAlt } from 'react-icons/fa';
+import { getCart, getAddresses, addAddress, deleteAddress, createOrder, createRazorpayOrder, verifyRazorpayPayment } from '../api';
+import { FaSpinner, FaMapMarkerAlt, FaPlus, FaTimes, FaTrashAlt, FaWallet, FaRegCreditCard, FaLeaf, FaChevronRight, FaMobileAlt, FaUniversity } from 'react-icons/fa';
+import { SiGooglepay, SiPhonepe, SiPaytm } from 'react-icons/si';
+
+// ... (Sub-components)
+const PaymentOption = ({ id, title, desc, icon, active, onClick }) => (
+    <label 
+        onClick={onClick}
+        className={`relative flex items-center p-6 border-2 rounded-[28px] cursor-pointer transition-all duration-500 overflow-hidden group
+            ${active ? 'border-green-600 bg-green-50 shadow-xl scale-[1.02]' : 'border-gray-100 bg-white hover:border-green-200 hover:bg-gray-50'}`}
+    >
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-500 ${active ? 'bg-green-600 text-white' : 'bg-gray-50 text-gray-400 group-hover:text-green-600'}`}>
+            {icon}
+        </div>
+        <div className="ml-5 flex-grow">
+            <h4 className={`text-base font-black transition-colors ${active ? 'text-gray-900' : 'text-gray-700'}`}>{title}</h4>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{desc}</p>
+        </div>
+        <div className={`transition-all duration-500 ${active ? 'text-green-600 translate-x-0 opacity-100' : 'text-gray-200 translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`}>
+            <FaChevronRight size={14} />
+        </div>
+        {active && <div className="absolute top-0 right-0 w-12 h-12 bg-green-600/5 rounded-bl-[40px]"></div>}
+    </label>
+);
 
 // --- INITIAL STATES ---
 const initialAddressState = {
@@ -41,6 +63,10 @@ const Address = () => {
     const [error, setError] = useState(null);
     const [isAddingNew, setIsAddingNew] = useState(false); 
     const [paymentMethod, setPaymentMethod] = useState('CashOnDelivery');
+    const [selectedSubMethod, setSelectedSubMethod] = useState(null);
+    const [preferredApp, setPreferredApp] = useState(null);
+    const [showUPIModal, setShowUPIModal] = useState(false);
+    const [transactionId, setTransactionId] = useState('');
     const [isProcessingOrder, setIsProcessingOrder] = useState(false);
 
 
@@ -194,41 +220,88 @@ const Address = () => {
         try {
             const config = await getAuthHeaders();
             
-            const orderData = {
-                shippingAddress: shippingAddressData,
-                paymentMethod: paymentMethod,
-            };
+            // --- QR CODE PAYMENT FLOW ---
+            if (paymentMethod === 'Online' && !showUPIModal) {
+                setShowUPIModal(true);
+                setIsProcessingOrder(false);
+                return;
+            }
 
-            // This is the call to the future order API
-            const { data } = await createOrder(orderData, config);
+
+            // If submitting from the modal
+            const finalPaymentMethod = paymentMethod === 'Online' ? `UPI (${preferredApp || 'Direct'}) - Ref: ${transactionId}` : 'CashOnDelivery';
+
+            const { data } = await createOrder({
+                shippingAddress: shippingAddressData,
+                paymentMethod: finalPaymentMethod,
+                isPaid: false, // Admin will verify transactionId later
+            }, config);
             
             navigate(`/order-confirmation/${data._id}`); 
 
         } catch (err) {
-            // --- DETAILED ERROR LOGGING FOR ORDER PLACEMENT START ---
-            let errorMessage = 'Failed to place order. Check connection.';
-
-            if (err.response) {
-                errorMessage = err.response.data.message || `Server Error (${err.response.status}).`;
-                
-                console.error("--- ORDER PLACEMENT FAILED ---");
-                console.error("Status:", err.response.status);
-                console.error("Server Message:", err.response.data.message);
-                console.error("Full Error Object:", err);
-                console.error("------------------------------");
-
-            } else if (err.request) {
-                errorMessage = 'No response from server.';
-            } else {
-                errorMessage = err.message || 'An unknown error occurred.';
-            }
-
-            setError(errorMessage);
-            // --- DETAILED ERROR LOGGING FOR ORDER PLACEMENT END ---
-        } finally {
+            console.error("ORDER PLACEMENT ERROR:", err);
+            setError(err.response?.data?.message || 'Order failed. Please try again.');
             setIsProcessingOrder(false);
         }
     };
+
+    const UPIPaymentModal = () => {
+        const upiID = import.meta.env.VITE_MY_UPI_ID || "your@upi";
+        const upiUrl = `upi://pay?pa=${upiID}&pn=WillowAndVine&am=${finalTotalPrice}&cu=INR&tn=Order_${Date.now()}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+
+        return (
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4">
+                <div className="bg-white w-full max-w-md rounded-[40px] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+                    <div className="p-8 text-center bg-green-600 text-white relative">
+                        <button onClick={() => setShowUPIModal(false)} className="absolute top-6 right-6 hover:rotate-90 transition-transform"><FaTimes size={24} /></button>
+                        <h3 className="text-2xl font-black mb-2">Scan & Pay</h3>
+                        <p className="text-green-100 text-sm opacity-80 uppercase tracking-widest font-bold">Total: Rs. {finalTotalPrice.toFixed(2)}</p>
+                    </div>
+
+
+                    <div className="p-10 space-y-8">
+                        <div className="flex justify-center">
+                            <div className="p-4 bg-white border-4 border-dashed border-green-100 rounded-[32px] shadow-inner">
+                                <img src={qrUrl} alt="UPI QR Code" className="w-[180px] h-[180px]" />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 text-center">
+                            <p className="text-gray-500 text-sm font-medium">Scan this QR in any UPI App (GPay, PhonePe, etc.) and complete the payment.</p>
+                            
+                            <div className="w-full h-px bg-gray-100"></div>
+
+                            <div className="space-y-2 text-left">
+                                <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-1">Enter 12-digit UTR / Ref ID</label>
+                                <input 
+                                    type="text"
+                                    placeholder="e.g. 408239012345"
+                                    value={transactionId}
+                                    onChange={(e) => setTransactionId(e.target.value)}
+                                    className="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-green-600 rounded-2xl outline-none font-bold text-center transition-all"
+                                />
+                                <p className="text-[10px] text-gray-400 text-center px-4 mt-2">Required for verification. Keep your screen open after payment.</p>
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={placeOrderHandler}
+                            disabled={transactionId.length < 10}
+                            className={`w-full py-4 rounded-2xl font-black transition-all duration-300 shadow-xl flex items-center justify-center space-x-3 
+                                ${transactionId.length < 10 ? 'bg-gray-100 text-gray-300' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                        >
+                            <span>Verify & Complete Order</span>
+                            <FaChevronRight size={14} className="opacity-50" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+
 
 
     // --- Render Logic ---
@@ -238,8 +311,10 @@ const Address = () => {
 
     
     const subtotal = calculateSubtotal(cart?.cartItems);
-    const finalShippingPrice = shippingPrice(subtotal);
-    const totalPrice = subtotal + finalShippingPrice;
+    const baseShipping = shippingPrice(subtotal);
+    const codCharge = paymentMethod === 'CashOnDelivery' ? 20 : 0;
+    const finalTotalPrice = subtotal + baseShipping + codCharge;
+
 
     return (
         <div className="container mx-auto py-8 px-4 max-w-6xl">
@@ -401,23 +476,105 @@ const Address = () => {
                         </div>
                     )}
                     
-                    {/* 3. Payment Method Section (Unchanged) */}
-                    <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                        <h2 className="text-2xl font-bold mb-4 text-green-700 border-b pb-2">2. Payment Method</h2>
-                        <div className="space-y-3">
-                            <label className="flex items-center p-3 border border-green-300 rounded-lg bg-green-50 cursor-pointer">
-                                <input
-                                    type="radio"
-                                    name="paymentMethod"
-                                    value="CashOnDelivery"
-                                    checked={paymentMethod === 'CashOnDelivery'}
-                                    onChange={(e) => setPaymentMethod(e.target.value)}
-                                    className="form-radio text-green-600 h-5 w-5"
-                                />
-                                <span className="ml-3 text-lg font-medium text-gray-800">Cash On Delivery (COD)</span>
-                            </label>
+                    {/* 3. Payment Method Section */}
+                    <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
+                        <h2 className="text-2xl font-black mb-8 text-gray-800 flex items-center">
+                            <span className="w-1.5 h-6 bg-green-600 rounded-full mr-3"></span>
+                            Choose Payment Method
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {/* 1. PhonePe */}
+                            <PaymentOption 
+                                id="PhonePe" 
+                                title="PhonePe" 
+                                desc="Pay via PhonePe app"
+                                icon={<SiPhonepe size={24} className="text-[#5f259f]" />}
+                                active={paymentMethod === 'Online' && selectedSubMethod === 'upi' && preferredApp === 'phonepe'}
+                                onClick={() => { 
+                                    setPaymentMethod('Online'); 
+                                    setSelectedSubMethod('upi'); 
+                                    setPreferredApp('phonepe');
+                                    document.getElementById('place-order-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }}
+                            />
+
+                            {/* 2. Google Pay */}
+                            <PaymentOption 
+                                id="GPay" 
+                                title="Google Pay" 
+                                desc="Pay via GPay app"
+                                icon={<SiGooglepay size={28} className="text-[#4285F4]" />}
+                                active={paymentMethod === 'Online' && selectedSubMethod === 'upi' && preferredApp === 'google_pay'}
+                                onClick={() => { 
+                                    setPaymentMethod('Online'); 
+                                    setSelectedSubMethod('upi'); 
+                                    setPreferredApp('google_pay');
+                                    document.getElementById('place-order-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }}
+                            />
+
+                            {/* 3. Paytm */}
+                            <PaymentOption 
+                                id="Paytm" 
+                                title="Paytm" 
+                                desc="Pay via Paytm Wallet / UPI"
+                                icon={<SiPaytm size={28} className="text-[#00B9F1]" />}
+                                active={paymentMethod === 'Online' && (selectedSubMethod === 'upi' || selectedSubMethod === 'wallet') && preferredApp === 'paytm'}
+                                onClick={() => { 
+                                    setPaymentMethod('Online'); 
+                                    setSelectedSubMethod('upi'); 
+                                    setPreferredApp('paytm');
+                                    document.getElementById('place-order-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }}
+                            />
+
+                            {/* 4. Other UPI */}
+                            <PaymentOption 
+                                id="UPI" 
+                                title="Other UPI" 
+                                desc="Any BHIM UPI / WhatsApp Pay"
+                                icon={<FaWallet size={20} className="text-orange-500" />}
+                                active={paymentMethod === 'Online' && selectedSubMethod === 'upi' && !preferredApp}
+                                onClick={() => { 
+                                    setPaymentMethod('Online'); 
+                                    setSelectedSubMethod('upi'); 
+                                    setPreferredApp(null);
+                                    document.getElementById('place-order-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }}
+                            />
+
+                            {/* 5. Cards */}
+                            <PaymentOption 
+                                id="Card" 
+                                title="Credit / Debit Card" 
+                                desc="Visa, Mastercard, RuPay"
+                                icon={<FaRegCreditCard size={20} className="text-blue-600" />}
+                                active={paymentMethod === 'Online' && selectedSubMethod === 'card'}
+                                onClick={() => { 
+                                    setPaymentMethod('Online'); 
+                                    setSelectedSubMethod('card'); 
+                                    setPreferredApp(null);
+                                    document.getElementById('place-order-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }}
+                            />
+
+                            {/* 6. COD */}
+                            <PaymentOption 
+                                id="COD" 
+                                title="Cash on Delivery" 
+                                desc="Pay when plants arrive"
+                                icon={<FaMapMarkerAlt size={20} className="text-green-600" />}
+                                active={paymentMethod === 'CashOnDelivery'}
+                                onClick={() => { 
+                                    setPaymentMethod('CashOnDelivery'); 
+                                    setSelectedSubMethod(null); 
+                                    setPreferredApp(null);
+                                }}
+                            />
                         </div>
                     </div>
+
 
                 </div>
 
@@ -441,40 +598,55 @@ const Address = () => {
                             <span>Items Subtotal:</span>
                             <span className="font-bold text-gray-800">Rs. {subtotal.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-lg font-medium mb-4 pb-4 border-b">
+                        <div className="flex justify-between text-lg font-medium mb-2 pb-2 border-b">
                             <span>Shipping:</span>
-                            <span className={`font-bold ${finalShippingPrice === 0 ? 'text-green-600' : 'text-gray-800'}`}>
-                                {finalShippingPrice === 0 ? 'FREE' : `Rs. ${finalShippingPrice.toFixed(2)}`}
+                            <span className={`font-bold ${baseShipping === 0 ? 'text-green-600' : 'text-gray-800'}`}>
+                                {baseShipping === 0 ? 'FREE' : `Rs. ${baseShipping.toFixed(2)}`}
                             </span>
                         </div>
+
+                        {paymentMethod === 'CashOnDelivery' && (
+                            <div className="flex justify-between text-lg font-medium mb-4 pb-4 border-b text-orange-600">
+                                <span>COD Handling Charge:</span>
+                                <span className="font-bold">+ Rs. 20.00</span>
+                            </div>
+                        )}
+
                         <div className="flex justify-between text-xl font-extrabold mb-6">
                             <span>Order Total:</span>
-                            <span className="text-red-600">Rs. {totalPrice.toFixed(2)}</span>
+                            <span className="text-red-600">Rs. {finalTotalPrice.toFixed(2)}</span>
                         </div>
                         
-                        {/* Place Order Button */}
                         <button
+                            id="place-order-btn"
                             type="button" 
                             onClick={placeOrderHandler}
-                            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold transition shadow-md flex items-center justify-center space-x-2 disabled:bg-gray-400"
+                            className={`w-full py-4 rounded-2xl font-black transition-all duration-300 shadow-xl flex items-center justify-center space-x-3 text-lg
+                                ${isProcessingOrder || !selectedAddress ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700 hover:-translate-y-1 active:scale-95'}`}
                             disabled={isProcessingOrder || !selectedAddress}
                         >
                             {isProcessingOrder ? (
                                 <>
                                     <FaSpinner className="animate-spin" />
-                                    <span>Placing Order...</span>
+                                    <span>Processing...</span>
                                 </>
                             ) : (
-                                <span>{`Place Order (Rs. ${totalPrice.toFixed(2)})`}</span>
+                                <>
+                                    <span>{paymentMethod === 'CashOnDelivery' ? `Amount to Pay · Rs. ${finalTotalPrice.toFixed(2)}` : `Pay Now · Rs. ${finalTotalPrice.toFixed(2)}`}</span>
+                                    {!isProcessingOrder && selectedAddress && <FaChevronRight size={14} className="opacity-50" />}
+                                </>
                             )}
                         </button>
+
                         {!selectedAddress && <p className="text-red-500 text-sm mt-3 text-center">Please select a shipping address.</p>}
                         {/* Only show order placement errors here, general errors handled by banner */}
                     </div>
                 </div>
             </div>
+            {showUPIModal && <UPIPaymentModal />}
         </div>
     );
 };
+
 
 export default Address;

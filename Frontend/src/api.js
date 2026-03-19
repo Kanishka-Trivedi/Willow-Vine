@@ -115,5 +115,8 @@ export const createOrder = async (order, config) => {
     return API.post("/orders", order, config);
 };
 
+export const createRazorpayOrder = (data, config) => API.post("/orders/razorpay", data, config);
+export const verifyRazorpayPayment = (data, config) => API.post("/orders/razorpay/verify", data, config);
+
 export const getOrderById = (id, config) => API.get(`/orders/${id}`, config);
-export const getMyOrders = (config) => API.get('/orders/myorders', config);
+export const getMyOrders = (config) => API.get('/orders/myorders', config);
